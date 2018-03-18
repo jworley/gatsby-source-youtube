@@ -1,14 +1,6 @@
 const axios = require("axios");
 const get = require("lodash/get");
-const crypto = require("crypto");
 const normalize = require("./normalize");
-
-function createHash(obj) {
-  return crypto
-    .createHash("md5")
-    .update(JSON.stringify(obj))
-    .digest("hex");
-}
 
 function getApi() {
   const rateLimit = 500;
@@ -36,23 +28,8 @@ function getApi() {
   return api;
 }
 
-function processDatum(datum, kind) {
-  const type = `Youtube${kind}`;
-  const id = `${type}-${datum.id}`;
-  const contentDigest = createHash(datum);
-
-  return {
-    ...datum,
-    id,
-    originalID: `${datum.id}`,
-    parent: "__SOURCE__",
-    children: [],
-    internal: { type, contentDigest }
-  };
-}
-
 exports.sourceNodes = async (
-  { boundActionCreators, store, cache },
+  { boundActionCreators, store, cache, createNodeId },
   { channelId, apiKey, maxVideos=50 }
 ) => {
   const { createNode } = boundActionCreators;
@@ -88,13 +65,14 @@ exports.sourceNodes = async (
       }
 
       videos = normalize.normalizeRecords(videos);
+      videos = normalize.createGatsbyIds(videos, createNodeId);
       videos = await normalize.downloadThumbnails({
         items: videos,
         store,
         cache,
         createNode
       });
-      videos.forEach(datum => createNode(processDatum(datum, "Video")));
+      normalize.createNodesFromEntities(videos, createNode);
     }
 
     return;

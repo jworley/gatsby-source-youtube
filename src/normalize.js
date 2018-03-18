@@ -1,12 +1,20 @@
 const get = require("lodash/get");
 const { createRemoteFileNode } = require("gatsby-source-filesystem");
+const crypto = require("crypto");
 
-function createHash(obj) {
-  return crypto
-    .createHash("md5")
-    .update(JSON.stringify(obj))
-    .digest("hex");
-}
+const digest = str =>
+  crypto
+    .createHash(`md5`)
+    .update(str)
+    .digest(`hex`);
+
+exports.createGatsbyIds = (items, createNodeId) => {
+  return items.map(e => {
+    e.originalID = e.id;
+    e.id = createNodeId(e.id.toString());
+    return e;
+  });
+};
 
 exports.normalizeRecords = items => {
   return (items || []).map(item => {
@@ -64,3 +72,20 @@ exports.downloadThumbnails = async ({ items, store, cache, createNode }) =>
       return item;
     })
   );
+
+exports.createNodesFromEntities = (items, createNode) => {
+  items.forEach(e => {
+    let { ...entity } = e;
+    let node = {
+      ...entity,
+      parent: null,
+      children: [],
+      internal: {
+        type: "YoutubeVideo",
+        contentDigest: digest(JSON.stringify(entity))
+      }
+    };
+
+    createNode(node);
+  });
+};

@@ -1,6 +1,7 @@
 const get = require("lodash/get");
 const { createRemoteFileNode } = require("gatsby-source-filesystem");
 const crypto = require("crypto");
+const polyfill = require("babel-polyfill");
 
 const digest = str =>
   crypto

@@ -45,7 +45,7 @@ exports.sourceNodes = function () {
         store = _ref.store,
         cache = _ref.cache,
         createNodeId = _ref.createNodeId;
-    var channelIds = _ref2.channelIds,
+    var channelId = _ref2.channelId,
         apiKey = _ref2.apiKey,
         _ref2$maxVideos = _ref2.maxVideos,
         maxVideos = _ref2$maxVideos === undefined ? 50 : _ref2$maxVideos;
@@ -139,14 +139,20 @@ exports.sourceNodes = function () {
             }();
 
             _context3.prev = 2;
-            _context3.next = 5;
-            return Promise.all(channelIds.map(function () {
-              var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(channelId) {
+
+            if (!Array.isArray(channelId)) {
+              _context3.next = 8;
+              break;
+            }
+
+            _context3.next = 6;
+            return Promise.all(channelId.map(function () {
+              var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(channelIdEntry) {
                 return regeneratorRuntime.wrap(function _callee2$(_context2) {
                   while (1) {
                     switch (_context2.prev = _context2.next) {
                       case 0:
-                        return _context2.abrupt("return", createVideoNodesFromChannelId(channelId, apiKey));
+                        return _context2.abrupt("return", createVideoNodesFromChannelId(channelIdEntry, apiKey));
 
                       case 1:
                       case "end":
@@ -161,22 +167,30 @@ exports.sourceNodes = function () {
               };
             }()));
 
-          case 5:
-            return _context3.abrupt("return");
+          case 6:
+            _context3.next = 10;
+            break;
 
           case 8:
-            _context3.prev = 8;
+            _context3.next = 10;
+            return createVideoNodesFromChannelId(channelId, apiKey);
+
+          case 10:
+            return _context3.abrupt("return");
+
+          case 13:
+            _context3.prev = 13;
             _context3.t0 = _context3["catch"](2);
 
             console.error(_context3.t0);
             process.exit(1);
 
-          case 12:
+          case 17:
           case "end":
             return _context3.stop();
         }
       }
-    }, _callee3, undefined, [[2, 8]]);
+    }, _callee3, undefined, [[2, 13]]);
   }));
 
   return function (_x, _x2) {

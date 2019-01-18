@@ -16,7 +16,7 @@ plugins: [
   {
     resolve: `gatsby-source-youtube`,
     options: {
-      channelIds: ['<< Array of Youtube channelIDs>>', 'UCK8sQmJBp8GCxrOtXWBpyEA', 'UCK8sQmJBp8GCxrOtXWBpyXY'],
+      channelId: ['<< Array of Youtube channelIDs>>', 'UCK8sQmJBp8GCxrOtXWBpyEA', 'UCK8sQmJBp8GCxrOtXWBpyXY'],
       apiKey: '<< Add your Youtube api key here>>',
       maxVideos: 50 // Defaults to 50
     },

@@ -31,7 +31,7 @@ function getApi() {
 
 exports.sourceNodes = async (
   { boundActionCreators, store, cache, createNodeId },
-  { channelIds, apiKey, maxVideos=50 }
+  { channelId, apiKey, maxVideos=50 }
 ) => {
   const { createNode } = boundActionCreators;
 
@@ -80,7 +80,12 @@ exports.sourceNodes = async (
   }
 
   try {
-    await Promise.all(channelIds.map(async (channelId) => createVideoNodesFromChannelId(channelId, apiKey)));
+    if(Array.isArray(channelId)) {
+      await Promise.all(channelId.map(async (channelIdEntry) => createVideoNodesFromChannelId(channelIdEntry, apiKey)));
+    }
+    else {
+      await createVideoNodesFromChannelId(channelId, apiKey);
+    }
     return;
   } catch (error) {
     console.error(error);

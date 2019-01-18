@@ -40,99 +40,143 @@ function getApi() {
 }
 
 exports.sourceNodes = function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(_ref, _ref2) {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(_ref, _ref2) {
     var boundActionCreators = _ref.boundActionCreators,
         store = _ref.store,
         cache = _ref.cache,
         createNodeId = _ref.createNodeId;
-    var channelId = _ref2.channelId,
+    var channelIds = _ref2.channelIds,
         apiKey = _ref2.apiKey,
         _ref2$maxVideos = _ref2.maxVideos,
         maxVideos = _ref2$maxVideos === undefined ? 50 : _ref2$maxVideos;
-
-    var createNode, api, channelResp, channelData, _videos, uploadsId, videos, pageSize, videoResp, _videos2, nextPageToken;
-
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+    var createNode, createVideoNodesFromChannelId;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context.prev = _context.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
             createNode = boundActionCreators.createNode;
-            api = getApi();
-            _context.prev = 2;
-            _context.next = 5;
-            return api.get("channels?part=contentDetails&id=" + channelId + "&key=" + apiKey);
+
+            createVideoNodesFromChannelId = function () {
+              var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(channelId, apiKey) {
+                var api, videos, channelResp, channelData, _videos, uploadsId, pageSize, videoResp, _videos2, nextPageToken;
+
+                return regeneratorRuntime.wrap(function _callee$(_context) {
+                  while (1) {
+                    switch (_context.prev = _context.next) {
+                      case 0:
+                        api = getApi();
+                        videos = [];
+                        _context.next = 4;
+                        return api.get("channels?part=contentDetails&id=" + channelId + "&key=" + apiKey);
+
+                      case 4:
+                        channelResp = _context.sent;
+                        channelData = channelResp.data.items[0];
+
+                        if (!channelData) {
+                          _context.next = 22;
+                          break;
+                        }
+
+                        uploadsId = get(channelData, "contentDetails.relatedPlaylists.uploads");
+                        pageSize = Math.min(50, maxVideos);
+                        _context.next = 11;
+                        return api.get("playlistItems?part=snippet%2CcontentDetails%2Cstatus&maxResults=" + pageSize + "&playlistId=" + uploadsId + "&key=" + apiKey);
+
+                      case 11:
+                        videoResp = _context.sent;
+
+                        (_videos = videos).push.apply(_videos, _toConsumableArray(videoResp.data.items));
+
+                      case 13:
+                        if (!(videoResp.data.nextPageToken && videos.length < maxVideos)) {
+                          _context.next = 22;
+                          break;
+                        }
+
+                        pageSize = Math.min(50, maxVideos - videos.length);
+                        nextPageToken = videoResp.data.nextPageToken;
+                        _context.next = 18;
+                        return api.get("playlistItems?part=snippet%2CcontentDetails%2Cstatus&maxResults=" + pageSize + "&pageToken=" + nextPageToken + "&playlistId=" + uploadsId + "&key=" + apiKey);
+
+                      case 18:
+                        videoResp = _context.sent;
+
+                        (_videos2 = videos).push.apply(_videos2, _toConsumableArray(videoResp.data.items));
+                        _context.next = 13;
+                        break;
+
+                      case 22:
+
+                        videos = normalize.normalizeRecords(videos);
+                        videos = normalize.createGatsbyIds(videos, createNodeId);
+                        _context.next = 26;
+                        return normalize.downloadThumbnails({
+                          items: videos,
+                          store: store,
+                          cache: cache,
+                          createNode: createNode
+                        });
+
+                      case 26:
+                        videos = _context.sent;
+
+                        normalize.createNodesFromEntities(videos, createNode);
+
+                        return _context.abrupt("return");
+
+                      case 29:
+                      case "end":
+                        return _context.stop();
+                    }
+                  }
+                }, _callee, undefined);
+              }));
+
+              return function createVideoNodesFromChannelId(_x3, _x4) {
+                return _ref4.apply(this, arguments);
+              };
+            }();
+
+            _context3.prev = 2;
+            _context3.next = 5;
+            return Promise.all(channelIds.map(function () {
+              var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(channelId) {
+                return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                  while (1) {
+                    switch (_context2.prev = _context2.next) {
+                      case 0:
+                        return _context2.abrupt("return", createVideoNodesFromChannelId(channelId, apiKey));
+
+                      case 1:
+                      case "end":
+                        return _context2.stop();
+                    }
+                  }
+                }, _callee2, undefined);
+              }));
+
+              return function (_x5) {
+                return _ref5.apply(this, arguments);
+              };
+            }()));
 
           case 5:
-            channelResp = _context.sent;
-            channelData = channelResp.data.items[0];
+            return _context3.abrupt("return");
 
-            if (!channelData) {
-              _context.next = 30;
-              break;
-            }
+          case 8:
+            _context3.prev = 8;
+            _context3.t0 = _context3["catch"](2);
 
-            uploadsId = get(channelData, "contentDetails.relatedPlaylists.uploads");
-            videos = [];
-            pageSize = Math.min(50, maxVideos);
-            _context.next = 13;
-            return api.get("playlistItems?part=snippet%2CcontentDetails%2Cstatus&maxResults=" + pageSize + "&playlistId=" + uploadsId + "&key=" + apiKey);
-
-          case 13:
-            videoResp = _context.sent;
-
-            (_videos = videos).push.apply(_videos, _toConsumableArray(videoResp.data.items));
-
-          case 15:
-            if (!(videoResp.data.nextPageToken && videos.length < maxVideos)) {
-              _context.next = 24;
-              break;
-            }
-
-            pageSize = Math.min(50, maxVideos - videos.length);
-            nextPageToken = videoResp.data.nextPageToken;
-            _context.next = 20;
-            return api.get("playlistItems?part=snippet%2CcontentDetails%2Cstatus&maxResults=" + pageSize + "&pageToken=" + nextPageToken + "&playlistId=" + uploadsId + "&key=" + apiKey);
-
-          case 20:
-            videoResp = _context.sent;
-
-            (_videos2 = videos).push.apply(_videos2, _toConsumableArray(videoResp.data.items));
-            _context.next = 15;
-            break;
-
-          case 24:
-
-            videos = normalize.normalizeRecords(videos);
-            videos = normalize.createGatsbyIds(videos, createNodeId);
-            _context.next = 28;
-            return normalize.downloadThumbnails({
-              items: videos,
-              store: store,
-              cache: cache,
-              createNode: createNode
-            });
-
-          case 28:
-            videos = _context.sent;
-
-            normalize.createNodesFromEntities(videos, createNode);
-
-          case 30:
-            return _context.abrupt("return");
-
-          case 33:
-            _context.prev = 33;
-            _context.t0 = _context["catch"](2);
-
-            console.error(_context.t0);
+            console.error(_context3.t0);
             process.exit(1);
 
-          case 37:
+          case 12:
           case "end":
-            return _context.stop();
+            return _context3.stop();
         }
       }
-    }, _callee, undefined, [[2, 33]]);
+    }, _callee3, undefined, [[2, 8]]);
   }));
 
   return function (_x, _x2) {

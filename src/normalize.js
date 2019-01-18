@@ -26,6 +26,8 @@ exports.normalizeRecords = items => {
       description: get(item, "snippet.description"),
       videoId: get(item, "contentDetails.videoId"),
       privacyStatus: get(item, "status.privacyStatus"),
+      channelId: get(item, "snippet.channelId"),
+      channelTitle: get(item, "snippet.channelTitle"),
       thumbnail: get(
         item,
         "snippet.thumbnails.maxres",

@@ -35,6 +35,8 @@ exports.normalizeRecords = function (items) {
       description: get(item, "snippet.description"),
       videoId: get(item, "contentDetails.videoId"),
       privacyStatus: get(item, "status.privacyStatus"),
+      channelId: get(item, "snippet.channelId"),
+      channelTitle: get(item, "snippet.channelTitle"),
       thumbnail: get(item, "snippet.thumbnails.maxres", get(item, "snippet.thumbnails.standard", get(item, "snippet.thumbnails.high", get(item, "snippet.thumbnails.medium", get(item, "snippet.thumbnails.default")))))
     };
 

@@ -31,13 +31,14 @@ function getApi() {
 
 exports.sourceNodes = async (
   { boundActionCreators, store, cache, createNodeId },
-  { channelId, apiKey, maxVideos=50 }
+  { channelIds, apiKey, maxVideos=50 }
 ) => {
   const { createNode } = boundActionCreators;
 
-  var api = getApi();
+  const createVideoNodesFromChannelId = async (channelId, apiKey) => {
+    var api = getApi();
+    let videos = [];
 
-  try {
     const channelResp = await api.get(
       `channels?part=contentDetails&id=${channelId}&key=${apiKey}`
     );
@@ -48,7 +49,6 @@ exports.sourceNodes = async (
         channelData,
         "contentDetails.relatedPlaylists.uploads"
       );
-      let videos = [];
       let pageSize = Math.min(50, maxVideos);
 
       let videoResp = await api.get(
@@ -64,18 +64,23 @@ exports.sourceNodes = async (
         );
         videos.push(...videoResp.data.items);
       }
-
-      videos = normalize.normalizeRecords(videos);
-      videos = normalize.createGatsbyIds(videos, createNodeId);
-      videos = await normalize.downloadThumbnails({
-        items: videos,
-        store,
-        cache,
-        createNode
-      });
-      normalize.createNodesFromEntities(videos, createNode);
     }
 
+    videos = normalize.normalizeRecords(videos);
+    videos = normalize.createGatsbyIds(videos, createNodeId);
+    videos = await normalize.downloadThumbnails({
+      items: videos,
+      store,
+      cache,
+      createNode
+    });
+    normalize.createNodesFromEntities(videos, createNode);
+
+    return;
+  }
+
+  try {
+    await Promise.all(channelIds.map(async (channelId) => createVideoNodesFromChannelId(channelId, apiKey)));
     return;
   } catch (error) {
     console.error(error);

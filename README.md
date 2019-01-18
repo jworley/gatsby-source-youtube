@@ -1,6 +1,6 @@
 # gatsby-source-youtube
 
-A [gatsby](https://www.gatsbyjs.org/) source plugin for fetching videos for a Youtube channel by channel ID.
+A [gatsby](https://www.gatsbyjs.org/) source plugin for fetching videos from a list of Youtube channels using their channel IDs.
 
 Learn more about Gatsby plugins and how to use them here: https://www.gatsbyjs.org/docs/plugins/
 
@@ -16,7 +16,7 @@ plugins: [
   {
     resolve: `gatsby-source-youtube`,
     options: {
-      channelId: '<<Youtube channelID eg. UCK8sQmJBp8GCxrOtXWBpyEA >>',
+      channelIds: ['<< Array of Youtube channelIDs>>', 'UCK8sQmJBp8GCxrOtXWBpyEA', 'UCK8sQmJBp8GCxrOtXWBpyXY'],
       apiKey: '<< Add your Youtube api key here>>',
       maxVideos: 50 // Defaults to 50
     },
@@ -40,11 +40,31 @@ Get all the videos:
         videoId
         publishedAt
         privacyStatus
+        channelTitle
       }
     }
   }
 }
+```
 
+Get videos from a specific channel:
+
+```graphql
+{
+  allYoutubeVideo(filter: {channelId: {eq: "UCK8sQmJBp8GCxrOtXWBpyEA"}}) {
+    edges {
+      node {
+        id
+        title
+        description
+        videoId
+        publishedAt
+        privacyStatus
+        channelTitle
+      }
+    }
+  }
+}
 ```
 
 ## Schema
@@ -69,3 +89,9 @@ Get all the videos:
 
 `localThumbnail`
 : The information about the locally saved thumbnail. Works with `gatsby-image`
+
+`channelId`
+: The channel id of the Youtube video
+
+`channelTitle`
+: The title of the channel of the Youtube video

@@ -6,7 +6,7 @@ Learn more about Gatsby plugins and how to use them here: https://www.gatsbyjs.o
 
 ## Install
 
-`npm install --save gatsby-source-youtube`
+`npm install --save gatsby-source-youtube-v2`
 
 
 ## gatsby-config.js

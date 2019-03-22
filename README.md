@@ -1,6 +1,6 @@
-# gatsby-source-youtube
+# gatsby-source-youtube-v2
 
-A [gatsby](https://www.gatsbyjs.org/) source plugin for fetching videos from a list of Youtube channels using their channel IDs.
+A [gatsby](https://www.gatsbyjs.org/) source plugin for fetching videos from a list of Youtube channels using their channel IDs (and plays nice with Gatsby v2).
 
 Learn more about Gatsby plugins and how to use them here: https://www.gatsbyjs.org/docs/plugins/
 

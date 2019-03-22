@@ -1,8 +1,8 @@
 {
-    "name": "gatsby-source-youtube",
-    "version": "1.0.1",
+    "name": "gatsby-source-youtube-v2",
+    "version": "1.0.0",
     "description": "Gatsby source to fetch data from Youtube API",
-    "repository": "https://github.com/jworley/gatsby-source-youtube",
+    "repository": "https://github.com/iyeraravind/gatsby-source-youtube",
     "main": "index.js",
     "scripts": {
         "build": "babel src --out-dir . --ignore __tests__",
@@ -14,7 +14,7 @@
         "gatsby-plugin",
         "youtube"
     ],
-    "author": "Jason Worley <jason@jasonincode.com>",
+    "author": "Aravind Iyer <aravindiyer@gmail.com>",
     "license": "MIT",
     "dependencies": {
         "axios": "^0.18.0",

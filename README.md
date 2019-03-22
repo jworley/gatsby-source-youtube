@@ -14,7 +14,7 @@ Learn more about Gatsby plugins and how to use them here: https://www.gatsbyjs.o
 ```javascript
 plugins: [
   {
-    resolve: `gatsby-source-youtube`,
+    resolve: `gatsby-source-youtube-v2`,
     options: {
       channelId: ['<< Array of Youtube channelIDs>>', 'UCK8sQmJBp8GCxrOtXWBpyEA', 'UCK8sQmJBp8GCxrOtXWBpyXY'],
       apiKey: '<< Add your Youtube api key here>>',

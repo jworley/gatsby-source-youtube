@@ -23,6 +23,7 @@ exports.normalizeRecords = items => {
       publishedAt: get(item, "snippet.publishedAt"),
       title: get(item, "snippet.title"),
       description: get(item, "snippet.description"),
+      tags: get(item, "snippet.tags"),
       videoId: get(item, "contentDetails.videoId"),
       privacyStatus: get(item, "status.privacyStatus"),
       thumbnail: get(

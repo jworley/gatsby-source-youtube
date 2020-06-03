@@ -30,23 +30,24 @@ function getApi() {
 
 exports.sourceNodes = async (
   { boundActionCreators, store, cache, createNodeId },
-  { channelId, apiKey, maxVideos=50 }
+  { channelId, playlistId, apiKey, maxVideos=50 }
 ) => {
   const { createNode } = boundActionCreators;
 
   var api = getApi();
-
+  
   try {
-    const channelResp = await api.get(
-      `channels?part=contentDetails&id=${channelId}&key=${apiKey}`
-    );
+    const isChannel = !! channelId;
+    const channelOrPlaylistId = isChannel ? channelId : playlistId;
+    const requestEndpoint = isChannel ? "channels" : "playlists";
+    const requestUrl = `${requestEndpoint}?part=contentDetails&id=${channelOrPlaylistId}&key=${apiKey}`;
+    const channelResp = await api.get(requestUrl);
 
     const channelData = channelResp.data.items[0];
     if (!!channelData) {
-      const uploadsId = get(
-        channelData,
-        "contentDetails.relatedPlaylists.uploads"
-      );
+      const uploadsId = isChannel 
+        ? get(channelData, "contentDetails.relatedPlaylists.uploads")
+        : playlistId;
       let videos = [];
       let pageSize = Math.min(50, maxVideos);
 
@@ -81,3 +82,4 @@ exports.sourceNodes = async (
     process.exit(1);
   }
 };
+

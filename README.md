@@ -25,6 +25,22 @@ plugins: [
 ]
 ```
 
+## Querying a playlist:
+
+
+```graphql
+plugins: [
+  {
+    resolve: `gatsby-source-youtube`,
+    options: {
+      playlistId: '<<Youtube playlistID eg. PLZ14qQz3cfJLVoaRUdk5JOzOpTvV3BYE4 >>',
+      ...
+    },
+  },
+  ...
+]
+```
+
 ## Examples of how to query:
 
 Get all the videos:
